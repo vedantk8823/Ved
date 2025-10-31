@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <conio.h>
+#define MAX 10
+#define INF 9999
+
+void dijkstra(int graph[MAX][MAX], int n, int start) {
+    int distance[MAX], visited[MAX], i, j, minDist, nextNode;
+
+    // Initialize distance and visited
+    for(i = 0; i < n; i++) {
+        distance[i] = INF;
+        visited[i] = 0;
+    }
+
+    distance[start] = 0;
+
+    // Dijkstra's algorithm
+    for(i = 0; i < n - 1; i++) {
+        minDist = INF;
+
+        // Find the unvisited node with the smallest distance
+        for(j = 0; j < n; j++) {
+            if(!visited[j] && distance[j] < minDist) {
+                minDist = distance[j];
+                nextNode = j;
+            }
+        }
+
+        visited[nextNode] = 1;
+
+        // Update distance of neighbors
+        for(j = 0; j < n; j++) {
+            if(!visited[j] && graph[nextNode][j] != 0 &&
+               distance[nextNode] + graph[nextNode][j] < distance[j]) {
+                distance[j] = distance[nextNode] + graph[nextNode][j];
+            }
+        }
+    }
+
+    // Display results
+    printf("\nShortest distances from node %d:\n", start);
+    for(i = 0; i < n; i++) {
+        printf("To node %d = %d\n", i, distance[i]);
+    }
+}
+
+void main() {
+    int graph[MAX][MAX], n, i, j, start;
+    clrscr();
+
+    // Get number of nodes
+    printf("Enter the number of nodes (max %d): ", MAX);
+    scanf("%d", &n);
+
+    // Get adjacency matrix from user
+    printf("\nEnter the adjacency matrix (0 if no edge):\n");
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    // Get starting node
+    printf("\nEnter the starting node (0 to %d): ", n - 1);
+    scanf("%d", &start);
+
+    dijkstra(graph, n, start);
+
+    getch();
+}
